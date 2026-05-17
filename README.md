@@ -17,6 +17,12 @@ Only modules listed in the configuration file are executed.
 
 ---
 
+## Picture
+
+![image](pictures/screenshot.png "screenshot")
+
+---
+
 ## Design Goals
 
 - High performance (low syscall overhead)
@@ -40,21 +46,7 @@ Only modules listed in the configuration file are executed.
 
 Default config location:
 
-project-root/config/default.conf
-
----
-
-## Installation
-
-### Install from release (recommended)
-
-```bash
-tar -xzf btwfetch-current-version.tar.gz
-cd btwfetch-current-version
-bash install.sh
-```
-
----
+config/default.conf
 
 ### Example
 
