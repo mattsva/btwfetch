@@ -1,0 +1,10 @@
+*.o
+btwfetch
+build/
+result
+.vscode/
+.idea/
+.DS_Store
+.test/
+.tmp/
+
