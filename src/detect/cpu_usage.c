@@ -1,6 +1,6 @@
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_cpu_usage(void)
+const char* detect_cpu_usage(void)
 {
- append("CPU Usage: TODO\n");
+    return "N/A";
 }

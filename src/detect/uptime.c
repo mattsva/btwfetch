@@ -1,31 +1,25 @@
 #include <stdio.h>
+#include "../../include/detect.h"
 
-#include "../../include/common.h"
-
-void detect_uptime(void)
+const char* detect_uptime(void)
 {
- char buffer[BUFFER_SIZE];
+    static char buf[64];
 
- if(read_file("/proc/uptime", buffer, sizeof(buffer)) < 0)
-  return;
+    FILE* f = fopen("/proc/uptime", "r");
+    if (!f)
+        return "Unknown";
 
- double uptime_seconds = 0.0;
+    double secs = 0;
+    fscanf(f, "%lf", &secs);
+    fclose(f);
 
- sscanf(buffer, "%lf", &uptime_seconds);
- long seconds = (long) uptime_seconds;
- long hours = seconds / 3600;
- long minutes = (seconds % 3600) / 60;
+    int h = (int)(secs / 3600);
+    int m = (int)((secs - h * 3600) / 60);
 
- char temp[128];
+    if (h > 0)
+        snprintf(buf, sizeof(buf), "%dh %dm", h, m);
+    else
+        snprintf(buf, sizeof(buf), "%dm", m);
 
- snprintf(
-  temp,
-  sizeof(temp),
-  "%ldh %ldm\n",
-  hours,
-  minutes
- );
-
- append("Uptime: ");
- append(temp);
+    return buf;
 }

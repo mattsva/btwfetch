@@ -1,6 +1,6 @@
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_memory_usage(void)
+const char* detect_memory_usage(void)
 {
- append("Memory Usage: TODO\n");
+    return "N/A";
 }

@@ -25,6 +25,9 @@ SRC = \
 	src/common.c \
 	src/config.c \
 	src/module.c \
+	src/layout.c \
+	src/ascii.c \
+	src/args.c \
 	src/detect/user.c \
 	src/detect/os.c \
 	src/detect/kernel.c \

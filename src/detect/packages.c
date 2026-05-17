@@ -1,6 +1,6 @@
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_packages(void)
+const char* detect_packages(void)
 {
- append("Packages: TODO\n");
+    return "N/A";
 }

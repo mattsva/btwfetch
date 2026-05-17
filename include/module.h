@@ -1,12 +1,12 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-typedef struct
-{
- const char* name;
- void (*function)(void);
+typedef struct {
+    const char* name;
+    const char* (*run)(void);
 } Module;
 
-extern Module modules[];
+void register_modules(void);
+const char* run_module(const char* name);
 
 #endif

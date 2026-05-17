@@ -1,34 +1,34 @@
+#include <stdio.h>
 #include <string.h>
 
+#include "../../include/detect.h"
 #include "../../include/common.h"
 
-void detect_os(void)
+const char* detect_os(void)
 {
- char buffer[BUFFER_SIZE];
+    static char buf[BUFFER_SIZE];
+    char line[256];
 
- if(read_file("/etc/os-release", buffer, sizeof(buffer)) < 0)
-  return;
+    FILE* f = fopen("/etc/os-release", "r");
+    if (!f)
+        return "Unknown";
 
- char* pretty = strstr(buffer, "PRETTY_NAME=");
- if(!pretty)
-  return;
+    while (fgets(line, sizeof(line), f))
+    {
+        if (strncmp(line, "PRETTY_NAME=", 12) == 0)
+        {
+            fclose(f);
+            char* val = line + 12;
+            /* strip quotes and newline */
+            if (val[0] == '"') val++;
+            size_t len = strlen(val);
+            while (len > 0 && (val[len-1] == '\n' || val[len-1] == '"'))
+                val[--len] = '\0';
+            snprintf(buf, sizeof(buf), "%s", val);
+            return buf;
+        }
+    }
 
- pretty += 12;
-
- if(*pretty == '"')
-  pretty++;
-
- char* end = strchr(pretty, '\n');
-
- if(end)
-  *end = '\0';
-
- size_t len = strlen(pretty);
-
- if(len > 0 && pretty[len - 1] == '"')
-  pretty[len - 1] = '\0';
-
- append("OS: ");
- append(pretty);
- append("\n");
+    fclose(f);
+    return "Unknown";
 }

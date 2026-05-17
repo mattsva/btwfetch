@@ -1,22 +1,20 @@
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <pwd.h>
 
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_user(void)
+const char* detect_user(void)
 {
- char hostname[256];
-
- if(gethostname(hostname, sizeof(hostname)) != 0)
-  return;
-
- struct passwd* pw = getpwuid(getuid());
-
- if(!pw)
-  return;
-
- append(pw->pw_name);
- append("@");
- append(hostname);
- append("\n");
+    static char buf[128];
+    struct passwd* pw = getpwuid(getuid());
+    if (pw)
+    {
+        char hostname[64] = {0};
+        gethostname(hostname, sizeof(hostname) - 1);
+        snprintf(buf, sizeof(buf), "%s@%s", pw->pw_name, hostname);
+        return buf;
+    }
+    return "unknown";
 }

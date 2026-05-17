@@ -1,29 +1,26 @@
 #ifndef DETECT_H
 #define DETECT_H
 
-void detect_user(void);
-void detect_os(void);
-void detect_kernel(void);
-void detect_cpu(void);
-void detect_ram(void);
-void detect_uptime(void);
-void detect_shell(void);
-void detect_de(void);
-void detect_locale(void);
-
-void detect_terminal(void);
-void detect_wm(void);
-void detect_theme(void);
-void detect_icons(void);
-void detect_resolution(void);
-
-void detect_cpu_usage(void);
-void detect_memory_usage(void);
-
-void detect_gpu(void);
-void detect_packages(void);
-void detect_disk(void);
-void detect_battery(void);
-void detect_network(void);
+const char* detect_user(void);
+const char* detect_os(void);
+const char* detect_kernel(void);
+const char* detect_cpu(void);
+const char* detect_ram(void);
+const char* detect_uptime(void);
+const char* detect_shell(void);
+const char* detect_de(void);
+const char* detect_locale(void);
+const char* detect_terminal(void);
+const char* detect_wm(void);
+const char* detect_theme(void);
+const char* detect_icons(void);
+const char* detect_resolution(void);
+const char* detect_cpu_usage(void);
+const char* detect_memory_usage(void);
+const char* detect_gpu(void);
+const char* detect_packages(void);
+const char* detect_disk(void);
+const char* detect_battery(void);
+const char* detect_network(void);
 
 #endif

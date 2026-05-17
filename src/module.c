@@ -1,30 +1,37 @@
 #include <string.h>
+#include <stdio.h>
 
 #include "../include/module.h"
+#include "../include/layout.h"
 #include "../include/detect.h"
 
-Module modules[] =
+static Module modules[32];
+static int module_count = 0;
+
+static void add_module(const char* name, const char* (*fn)(void))
 {
- {"user", detect_user},
- {"os", detect_os},
- {"kernel", detect_kernel},
- {"uptime", detect_uptime},
- {"shell", detect_shell},
- {"terminal", detect_terminal},
- {"de", detect_de},
- {"wm", detect_wm},
- {"theme", detect_theme},
- {"icons", detect_icons},
- {"resolution", detect_resolution},
- {"cpu", detect_cpu},
- {"cpu_usage", detect_cpu_usage},
- {"ram", detect_ram},
- {"memory_usage", detect_memory_usage},
- {"gpu", detect_gpu},
- {"packages", detect_packages},
- {"disk", detect_disk},
- {"battery", detect_battery},
- {"network", detect_network},
- {"locale", detect_locale},
- {NULL, NULL}
-};
+    modules[module_count++] = (Module){ name, fn };
+}
+
+void register_modules(void)
+{
+    add_module("user", detect_user);
+    add_module("os", detect_os);
+    add_module("kernel", detect_kernel);
+    add_module("uptime", detect_uptime);
+    add_module("shell", detect_shell);
+    add_module("de", detect_de);
+    add_module("locale", detect_locale);
+    add_module("terminal", detect_terminal);
+    add_module("wm", detect_wm);
+}
+
+const char* run_module(const char* name)
+{
+    for (int i = 0; i < module_count; i++)
+    {
+        if (strcmp(modules[i].name, name) == 0)
+            return modules[i].run();
+    }
+    return "";
+}

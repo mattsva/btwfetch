@@ -1,59 +1,50 @@
 #include <unistd.h>
 #include <string.h>
+#include <stdio.h>
 
-#include "../include/common.h"
+#include "../include/args.h"
+#include "../include/module.h"
+#include "../include/layout.h"
 #include "../include/config.h"
 #include "../include/version.h"
 
-static void print_help(void)
+static void add_line(const char* key)
 {
- const char msg[] =
-  "btwfetch - system information tool\n\n"
-  "Usage:\n"
-  "  btwfetch               Run system fetch\n"
-  "  btwfetch --help        Show help\n"
-  "  btwfetch --version     Show version\n";
+    const char* value = run_module(key);
 
- write(STDOUT_FILENO, msg, sizeof(msg) - 1);
-}
+    if (!value || value[0] == '\0')
+        value = "N/A";
 
-static void print_version(void)
-{
- const char prefix[] = "btwfetch version ";
- const char suffix[] = "\n";
+    char buffer[512];
+    snprintf(buffer, sizeof(buffer), "%s: %s", key, value);
 
- write(STDOUT_FILENO, prefix, sizeof(prefix) - 1);
- write(STDOUT_FILENO, BTWFETCH_VERSION, strlen(BTWFETCH_VERSION));
- write(STDOUT_FILENO, suffix, sizeof(suffix) - 1);
-}
-
-static int handle_args(int argc, char** argv)
-{
- if (argc <= 1)
-  return 0;
-
- if (strcmp(argv[1], "--help") == 0)
- {
-  print_help();
-  return 1;
- }
- if (strcmp(argv[1], "--version") == 0)
- {
-  print_version();
-  return 1;
- }
-
- return 0;
+    layout_add("", buffer);
 }
 
 int main(int argc, char** argv)
 {
- if (handle_args(argc, argv))
-  return 0;
+    if (handle_args(argc, argv))
+        return 0;
 
- load_config("config/default.conf");
+    register_modules();
 
- write(STDOUT_FILENO, output, output_len);
+    if (load_config("config/default.conf") < 0)
+    {
+        write(STDERR_FILENO, "failed to load config\n", 22);
+        return 1;
+    }
 
- return 0;
+    char modules[64][32];
+    int count = get_config_modules(modules);
+
+    layout_reset();
+
+    for (int i = 0; i < count; i++)
+    {
+        add_line(modules[i]);
+    }
+
+    layout_render();
+
+    return 0;
 }

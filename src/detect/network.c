@@ -1,6 +1,6 @@
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_network(void)
+const char* detect_network(void)
 {
- append("Network: TODO\n");
+    return "N/A";
 }

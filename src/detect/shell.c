@@ -1,22 +1,14 @@
-
 #include <stdlib.h>
 #include <string.h>
+#include "../../include/detect.h"
 
-#include "../../include/common.h"
-
-void detect_shell(void)
+const char* detect_shell(void)
 {
- const char* shell = getenv("SHELL");
+    const char* shell = getenv("SHELL");
+    if (!shell)
+        return "Unknown";
 
- if(!shell)
-  return;
-
- const char* name = strrchr(shell, '/');
-
- if(name)
-  shell = name + 1;
-
- append("Shell: ");
- append(shell);
- append("\n");
+    /* return basename */
+    const char* base = strrchr(shell, '/');
+    return base ? base + 1 : shell;
 }

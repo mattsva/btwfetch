@@ -1,16 +1,11 @@
-
 #include <stdlib.h>
+#include "../../include/detect.h"
 
-#include "../../include/common.h"
-
-void detect_terminal(void)
+const char* detect_terminal(void)
 {
- const char* term = getenv("TERM");
-
- if(!term)
-  return;
-
- append("Terminal: ");
- append(term);
- append("\n");
+    const char* t = getenv("TERM_PROGRAM");
+    if (t && t[0]) return t;
+    t = getenv("TERM");
+    if (t && t[0]) return t;
+    return "Unknown";
 }

@@ -1,6 +1,6 @@
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_disk(void)
+const char* detect_disk(void)
 {
- append("Disk: TODO\n");
+    return "N/A";
 }

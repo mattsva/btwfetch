@@ -1,15 +1,11 @@
 #include <stdlib.h>
+#include "../../include/detect.h"
 
-#include "../../include/common.h"
-
-void detect_locale(void)
+const char* detect_locale(void)
 {
- const char* locale = getenv("LANG");
-
- if(!locale)
-  return;
-
- append("Locale: ");
- append(locale);
- append("\n");
+    const char* loc = getenv("LANG");
+    if (loc && loc[0]) return loc;
+    loc = getenv("LC_ALL");
+    if (loc && loc[0]) return loc;
+    return "Unknown";
 }

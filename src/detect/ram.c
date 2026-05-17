@@ -1,34 +1,26 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "../../include/detect.h"
 
-#include "../../include/common.h"
-
-void detect_ram(void)
+const char* detect_ram(void)
 {
- char buffer[BUFFER_SIZE];
+    static char buf[64];
+    FILE* f = fopen("/proc/meminfo", "r");
+    if (!f) return "Unknown";
 
- if(read_file("/proc/meminfo", buffer, sizeof(buffer)) < 0)
-  return;
+    long total = 0, available = 0;
+    char key[64];
+    long val;
+    char unit[16];
 
- char* mem = strstr(buffer, "MemTotal:");
+    while (fscanf(f, "%63s %ld %15s\n", key, &val, unit) == 3)
+    {
+        if (strcmp(key, "MemTotal:") == 0) total = val;
+        if (strcmp(key, "MemAvailable:") == 0) available = val;
+    }
+    fclose(f);
 
- if(!mem)
-  return;
-
- mem += 9;
-
- while(*mem == ' ')
-  mem++;
-
- long kb = atol(mem);
-
- long mb = kb / 1024;
-
- char temp[64];
-
- snprintf(temp, sizeof(temp), "%ld MB\n", mb);
-
- append("RAM: ");
- append(temp);
+    long used = total - available;
+    snprintf(buf, sizeof(buf), "%ld MiB / %ld MiB", used / 1024, total / 1024);
+    return buf;
 }

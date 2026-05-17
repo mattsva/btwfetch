@@ -1,6 +1,6 @@
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_resolution(void)
+const char* detect_resolution(void)
 {
- append("Resolution: TODO\n"); // NOTE: this needs wayland/x11 etc. seperation
+    return "N/A";
 }

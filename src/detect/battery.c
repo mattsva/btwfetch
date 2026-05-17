@@ -1,6 +1,6 @@
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_battery(void)
+const char* detect_battery(void)
 {
- append("Battery: TODO\n");
+    return "N/A";
 }

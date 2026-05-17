@@ -1,6 +1,6 @@
-#include "../../include/common.h"
+#include "../../include/detect.h"
 
-void detect_gpu(void)
+const char* detect_gpu(void)
 {
- append("GPU: TODO\n");
+    return "N/A";
 }

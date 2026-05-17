@@ -1,31 +1,51 @@
-
 #include <stdio.h>
 #include <string.h>
 
-#include "../include/module.h"
+#include "../include/config.h"
 
-void load_config(const char* path)
+static char modules[MAX_CONFIG_MODULES][32];
+static int module_count = 0;
+
+int load_config(const char* path)
 {
- FILE* file = fopen(path, "r");
+    FILE* f = fopen(path, "r");
+    if (!f)
+        return -1;
 
- if(!file)
-  return;
+    module_count = 0;
 
- char line[256];
+    char line[64];
 
- while(fgets(line, sizeof(line), file))
- {
-  line[strcspn(line, "\n")] = '\0';
+    while (fgets(line, sizeof(line), f))
+    {
+        // strip newline
+        line[strcspn(line, "\n")] = 0;
 
-  for(int i = 0; modules[i].name != NULL; i++)
-  {
-   if(strcmp(line, modules[i].name) == 0)
-   {
-       modules[i].function();
-       break;
-   }
-  }
- }
+        if (line[0] == '\0')
+            continue;
 
- fclose(file);
+        if (module_count >= MAX_CONFIG_MODULES)
+            break;
+
+        strncpy(modules[module_count], line, 31);
+        modules[module_count][31] = '\0';
+
+        module_count++;
+    }
+
+    fclose(f);
+    return module_count;
+}
+
+int get_config_modules(char out[MAX_CONFIG_MODULES][32])
+{
+    for (int i = 0; i < module_count; i++)
+        strcpy(out[i], modules[i]);
+
+    return module_count;
+}
+
+int get_config_count(void)
+{
+    return module_count;
 }
