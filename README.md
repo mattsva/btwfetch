@@ -51,7 +51,19 @@ project-root/config/default.conf
 ```bash
 tar -xzf btwfetch-current-version.tar.gz
 cd btwfetch-current-version
-bash install.sh
+make
+mkdir -p ~/.local/bin
+cp btwfetch ~/.local/bin/
+chmod +x ~/.local/bin/btwfetch
+```
+
+if you use fish:
+```bash
+set -U fish_user_paths $HOME/.local/bin $fish_user_paths
+```
+if not:
+```bash
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
 ---
