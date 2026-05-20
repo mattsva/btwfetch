@@ -1,6 +1,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <pwd.h>
+#include <sys/types.h>
 
 #include "../include/args.h"
 #include "../include/module.h"
@@ -16,7 +19,12 @@ static void add_line(const char* key)
         value = "N/A";
 
     char buffer[512];
-    snprintf(buffer, sizeof(buffer), "%s: %s", key, value);
+
+    snprintf(buffer,
+             sizeof(buffer),
+             "%s: %s",
+             key,
+             value);
 
     layout_add("", buffer);
 }
@@ -28,18 +36,39 @@ int main(int argc, char** argv)
 
     register_modules();
 
-    if (load_config("config/default.conf") < 0)
+    struct passwd* pw = getpwuid(getuid());
+
+    if (!pw)
     {
-        write(STDERR_FILENO, "failed to load config\n", 22);
+        write(STDERR_FILENO,
+              "failed to get home directory\n",
+              30);
+
         return 1;
     }
 
-    char modules[64][32];
-    int count = get_config_modules(modules);
+    const char* home = pw->pw_dir;
 
-    layout_reset();
+    char config_path[512];
 
-    for (int i = 0; i < count; i++)
+    snprintf(config_path,
+             sizeof(config_path),
+             "%s/.config/btwfetch/default.conf",
+             home);
+
+    if (load_config(config_path) < 0)
+    {
+        perror("load_config");
+        return 1;
+    }
+
+    char modules[MAX_CONFIG_MODULES][32];
+
+    get_config_modules(modules);
+
+    int count = get_config_count();
+
+    for (int i = 0; i < count; ++i)
     {
         add_line(modules[i]);
     }

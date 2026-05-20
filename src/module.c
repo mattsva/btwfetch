@@ -24,6 +24,7 @@ void register_modules(void)
     add_module("locale", detect_locale);
     add_module("terminal", detect_terminal);
     add_module("wm", detect_wm);
+    add_module("battery", detect_battery);
 }
 
 const char* run_module(const char* name)
