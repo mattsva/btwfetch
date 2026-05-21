@@ -9,6 +9,7 @@
 #include "../include/module.h"
 #include "../include/layout.h"
 #include "../include/config.h"
+#include "../include/common.h"
 #include "../include/version.h"
 
 static void add_line(const char* key)
@@ -20,19 +21,16 @@ static void add_line(const char* key)
 
     char buffer[512];
 
-    snprintf(buffer,
-             sizeof(buffer),
-             "%s: %s",
-             key,
-             value);
+    snprintf(buffer, sizeof(buffer), "%s: %s", key, value);
 
     layout_add("", buffer);
 }
 
 int main(int argc, char** argv)
 {
-    if (handle_args(argc, argv))
-        return 0;
+    int r = handle_args(argc, argv);
+    if (r != 0)
+        return r < 0 ? 1 : 0;
 
     register_modules();
 
@@ -40,10 +38,8 @@ int main(int argc, char** argv)
 
     if (!pw)
     {
-        write(STDERR_FILENO,
-              "failed to get home directory\n",
-              30);
-
+        xwrite(STDERR_FILENO,
+               "error: failed to get home directory\n", 36);
         return 1;
     }
 
@@ -51,10 +47,8 @@ int main(int argc, char** argv)
 
     char config_path[512];
 
-    snprintf(config_path,
-             sizeof(config_path),
-             "%s/.config/btwfetch/default.conf",
-             home);
+    snprintf(config_path, sizeof(config_path),
+             "%s/.config/btwfetch/config.conf", home);
 
     if (load_config(config_path) < 0)
     {
@@ -69,9 +63,7 @@ int main(int argc, char** argv)
     int count = get_config_count();
 
     for (int i = 0; i < count; ++i)
-    {
         add_line(modules[i]);
-    }
 
     layout_render();
 

@@ -4,6 +4,7 @@
 
 #include "../include/layout.h"
 #include "../include/ascii.h"
+#include "../include/common.h"
 
 #define MAX_LINES 128
 
@@ -39,10 +40,10 @@ void layout_add(const char* left, const char* right)
 
 static void write_str(const char* s)
 {
-    if (!s)
+    if (!s || s[0] == '\0')
         return;
 
-    write(STDOUT_FILENO, s, strlen(s));
+    xwrite(STDOUT_FILENO, s, strlen(s));
 }
 
 void layout_render(void)
@@ -52,12 +53,12 @@ void layout_render(void)
 
     for (int i = 0; i < max; i++)
     {
-        const char* left = (i < ascii_lines) ? ASCII_ART[i] : "";
-        const char* right = (i < line_count) ? lines[i].right : "";
+        const char* left  = (i < ascii_lines) ? ASCII_ART[i] : "";
+        const char* right = (i < line_count)  ? lines[i].right : "";
 
         write_str(left);
         write_str("    ");
         write_str(right);
-        write_str("\n");
+        xwrite(STDOUT_FILENO, "\n", 1);
     }
 }

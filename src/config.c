@@ -18,10 +18,11 @@ int load_config(const char* path)
 
     while (fgets(line, sizeof(line), f))
     {
-        // strip newline
-        line[strcspn(line, "\n")] = 0;
+        /* strip newline */
+        line[strcspn(line, "\n")] = '\0';
 
-        if (line[0] == '\0')
+        /* skip empty lines and comments */
+        if (line[0] == '\0' || line[0] == '#')
             continue;
 
         if (module_count >= MAX_CONFIG_MODULES)
