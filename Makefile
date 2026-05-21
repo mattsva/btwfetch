@@ -1,12 +1,9 @@
-CC     = gcc
-MARCH ?= x86-64-v2
+kkkkCC ?= cc
+PREFIX ?= /usr/local
 
 CFLAGS = \
-	-O3 \
-	-flto \
-	-march=$(MARCH) \
+	-O2 \
 	-mtune=generic \
-	-pipe \
 	-fdata-sections \
 	-ffunction-sections \
 	-ffile-prefix-map=$(PWD)=. \
@@ -17,9 +14,7 @@ CFLAGS = \
 	-Iinclude
 
 LDFLAGS = \
-	-flto \
-	-Wl,--gc-sections \
-	-Wl,-s
+	-Wl,--gc-sections
 
 SRC = \
 	src/main.c \
@@ -51,12 +46,16 @@ SRC = \
 	src/detect/battery.c \
 	src/detect/network.c
 
-OBJ    = $(SRC:.c=.o)
+OBJ = $(SRC:.c=.o)
 TARGET = btwfetch
 
 .PHONY: all clean run install
 
 all: $(TARGET)
+
+# ✔ explicit compile rule (important for Nix + reproducibility)
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJ)
 	$(CC) $(OBJ) -o $(TARGET) $(LDFLAGS)
@@ -68,11 +67,8 @@ run: all
 	./$(TARGET)
 
 install: all
-	sudo install -Dm755 $(TARGET) /usr/local/bin/$(TARGET)
-	mkdir -p $(HOME)/.config/btwfetch
-	@if [ ! -f $(HOME)/.config/btwfetch/config.conf ]; then \
-		cp config/config.conf $(HOME)/.config/btwfetch/config.conf; \
-		echo "config installed to ~/.config/btwfetch/config.conf"; \
-	else \
-		echo "config already exists, skipping"; \
-	fi
+	install -Dm755 $(TARGET) $(DESTDIR)$(PREFIX)/bin/$(TARGET)
+
+	install -Dm644 \
+		config/config.conf \
+		$(DESTDIR)$(PREFIX)/share/btwfetch/config.conf
