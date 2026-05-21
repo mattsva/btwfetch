@@ -3,16 +3,14 @@
 
 #include <stddef.h>
 
-const char* detect_battery(void);
-
-/* future extensions */
+/* future structured battery info */
 struct battery_info {
     char name[64];
     char status[32];
-    int capacity;
+    int  capacity;
 };
 
-/* for later structured access */
-int detect_batteries(struct battery_info *out, int max);
+/* detect_battery is declared in detect.h — use that header for the primary API */
+int detect_batteries(struct battery_info* out, int max);
 
 #endif
