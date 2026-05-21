@@ -1,1 +1,1 @@
-#define BTWFETCH_VERSION "0.0.4"
+#define BTWFETCH_VERSION "0.0.5"
