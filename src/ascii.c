@@ -11,7 +11,17 @@ const char *ASCII_ART[] = {
     " {       }\\  )_\\_   _ ",
     " |  \\_/  |/ /  \\_\\_/ )",
     "  \\__/  /(_/     \\__/ ",
-    "    (__/              "
+    "    (__/              ",
+    "                      ",
+    "                      ",
+    "                      ",
+    "                      ",
+    "                      ",
+    "                      ",
+    "                      ",
+    "                      ",
+    "                      ",
+    "                      "
 };
 
 const int ASCII_ART_LINES = sizeof(ASCII_ART) / sizeof(ASCII_ART[0]);
