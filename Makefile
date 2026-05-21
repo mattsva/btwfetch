@@ -1,9 +1,10 @@
-CC = gcc
+CC     = gcc
+MARCH ?= x86-64-v2
 
 CFLAGS = \
 	-O3 \
 	-flto \
-	-march=x86-64-v2 \
+	-march=$(MARCH) \
 	-mtune=generic \
 	-pipe \
 	-fdata-sections \
@@ -50,17 +51,28 @@ SRC = \
 	src/detect/battery.c \
 	src/detect/network.c
 
-OBJ = $(SRC:.c=.o)
-
+OBJ    = $(SRC:.c=.o)
 TARGET = btwfetch
+
+.PHONY: all clean run install
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(TARGET) $(LDFLAGS)
+	$(CC) $(OBJ) -o $(TARGET) $(LDFLAGS)
 
 clean:
 	rm -f $(OBJ) $(TARGET)
 
 run: all
 	./$(TARGET)
+
+install: all
+	sudo install -Dm755 $(TARGET) /usr/local/bin/$(TARGET)
+	mkdir -p $(HOME)/.config/btwfetch
+	@if [ ! -f $(HOME)/.config/btwfetch/config.conf ]; then \
+		cp config/config.conf $(HOME)/.config/btwfetch/config.conf; \
+		echo "config installed to ~/.config/btwfetch/config.conf"; \
+	else \
+		echo "config already exists, skipping"; \
+	fi
