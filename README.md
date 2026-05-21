@@ -45,8 +45,6 @@ Only modules listed in the configuration file are executed.
 ## Configuration
 
 Default config location:
-
-<<<<<<< HEAD
 project-root/config/default.conf
 
 ---
@@ -76,7 +74,6 @@ export PATH="$HOME/.local/bin:$PATH"
 ---
 =======
 config/default.conf
->>>>>>> e65aa731f6559989a9c19f3685ecbcc6a00723f3
 
 ### Example
 
