@@ -10,13 +10,19 @@ const char* detect_uptime(void)
         return "Unknown";
 
     double secs = 0;
-    fscanf(f, "%lf", &secs);
+    int parsed = fscanf(f, "%lf", &secs);
     fclose(f);
 
-    int h = (int)(secs / 3600);
-    int m = (int)((secs - h * 3600) / 60);
+    if (parsed != 1)
+        return "Unknown";
 
-    if (h > 0)
+    int d = (int)(secs / 86400);
+    int h = (int)((secs - d * 86400) / 3600);
+    int m = (int)((secs - d * 86400 - h * 3600) / 60);
+
+    if (d > 0)
+        snprintf(buf, sizeof(buf), "%dd %dh %dm", d, h, m);
+    else if (h > 0)
         snprintf(buf, sizeof(buf), "%dh %dm", h, m);
     else
         snprintf(buf, sizeof(buf), "%dm", m);
