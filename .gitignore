@@ -1,10 +1,35 @@
+# Build artifacts
 *.o
+*.so
+*.a
+*.out
+*.exe
+
+# Binary (local build output)
 btwfetch
-build/
+
+# Nix
 result
+result-*
+
+# Build directories
+build/
+dist/
+
+# Editor / IDE (funfact, i just use nano)
 .vscode/
 .idea/
-.DS_Store
-.test/
-.tmp/
+*.swp
+*.swo
 
+# OS junk
+.DS_Store
+
+# Temporary files
+.tmp/
+test/
+*.log
+
+# Nix specific
+.direnv/
+.envrc
