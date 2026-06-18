@@ -15,7 +15,10 @@ static void add_module(const char* name, const char* (*fn)(void))
     if (module_count >= MAX_MODULES)
         return;
 
-    modules[module_count++] = (Module){ name, fn };
+    modules[module_count].name = name;
+    modules[module_count].run  = fn;
+
+    module_count++;
 }
 
 void register_modules(void)
@@ -50,5 +53,6 @@ const char* run_module(const char* name)
         if (strcmp(modules[i].name, name) == 0)
             return modules[i].run();
     }
+
     return "";
 }

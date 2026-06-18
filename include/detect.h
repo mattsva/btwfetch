@@ -1,8 +1,17 @@
 #ifndef DETECT_H
 #define DETECT_H
 
-const char* detect_user(void);
+typedef struct
+{
+    char pretty_name[256];
+    char id[64];
+    char id_like[128];
+} OSInfo;
+
+const OSInfo* detect_os_raw(void);
 const char* detect_os(void);
+
+const char* detect_user(void);
 const char* detect_kernel(void);
 const char* detect_cpu(void);
 const char* detect_ram(void);
